@@ -1,6 +1,9 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function LandingPage() {
+  const navigate = useNavigate();
+
   return (
     <main className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-600 via-purple-600 to-pink-500 text-white px-4">
       {/* Navbar */}
@@ -11,7 +14,9 @@ export default function LandingPage() {
           </div>
           <h1 className="font-bold text-xl">WeatherNow</h1>
         </div>
-        <button className="bg-white text-blue-600 px-4 py-2 rounded-full font-medium hover:bg-opacity-90">
+        <button 
+        onClick={() => navigate("/dashboard")}
+        className="bg-white text-blue-600 px-4 py-2 rounded-full font-medium hover:bg-opacity-90">
           Get Started
         </button>
       </nav>
@@ -25,7 +30,9 @@ export default function LandingPage() {
           Get accurate weather forecasts for any location worldwide. Plan your
           day with confidence.
         </p>
-        <button className="bg-white text-blue-600 font-semibold px-6 py-3 rounded-full shadow-md hover:scale-105 transition-transform">
+        <button 
+        onClick={() => navigate("/dashboard")}
+        className="bg-white text-blue-600 font-semibold px-6 py-3 rounded-full shadow-md hover:scale-105 transition-transform">
           Launch Dashboard →
         </button>
       </section>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function Dashboard() {
+export default function Dashboard() {
   const [city, setCity] = useState("");
   const [weather, setWeather] = useState(null);
   const [error, setError] = useState("");
@@ -10,41 +10,63 @@ function Dashboard() {
     setError("");
     setWeather(null);
 
-    const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`;
+    if (!city.trim()) {
+      setError("Please enter a city name.");
+      return;
+    }
 
     try {
-      const response = await fetch(url);
+      const apiKey = "250a2978e0e1afaef8dffb8f29c9a6c0"; // 🔑 Replace with your API key
+      const response = await fetch(
+        `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`
+      );
+
       if (!response.ok) {
-        throw new Error("City not found");
+        throw new Error("City not found.");
       }
 
       const data = await response.json();
-      setWeather(data);
+      setWeather({
+        name: data.name,
+        temp: data.main.temp,
+        humidity: data.main.humidity,
+        wind: data.wind.speed,
+        icon: data.weather[0].icon,
+        description: data.weather[0].description,
+      });
     } catch (err) {
       setError(err.message);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-400 to-sky-200 flex flex-col items-center px-6 py-10 text-white">
-      <h1 className="text-4xl font-bold mb-8">Weather Dashboard</h1>
+    <main className="min-h-screen flex flex-col items-center justify-start bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-800 text-white p-6">
+      {/* Header */}
+      <header className="w-full flex justify-between items-center max-w-4xl mb-8">
+        <h1 className="text-2xl font-bold">🌤 Weather Dashboard</h1>
+        <a
+          href="/"
+          className="bg-white text-blue-600 px-4 py-2 rounded-full font-medium hover:bg-opacity-90 transition"
+        >
+          ← Back Home
+        </a>
+      </header>
 
       {/* Search Bar */}
       <form
         onSubmit={fetchWeather}
-        className="flex flex-col md:flex-row gap-4 mb-10 w-full max-w-xl"
+        className="w-full max-w-md flex gap-3 mb-8"
       >
         <input
           type="text"
+          placeholder="Enter city name..."
           value={city}
           onChange={(e) => setCity(e.target.value)}
-          placeholder="Enter city name..."
-          className="w-full px-4 py-3 rounded-xl text-gray-800 focus:outline-none"
+          className="flex-1 px-4 py-3 rounded-lg text-gray-800 focus:outline-none"
         />
         <button
           type="submit"
-          className="bg-white text-blue-600 font-semibold px-6 py-3 rounded-xl hover:bg-blue-50 transition"
+          className="bg-yellow-400 hover:bg-yellow-500 text-blue-900 px-5 py-3 rounded-lg font-semibold transition"
         >
           Search
         </button>
@@ -52,39 +74,38 @@ function Dashboard() {
 
       {/* Error Message */}
       {error && (
-        <p className="text-red-200 bg-red-500/30 px-4 py-2 rounded-lg mb-6">
-          {error}
-        </p>
+        <p className="bg-red-500/80 px-4 py-2 rounded-lg mb-6">{error}</p>
       )}
 
-      {/* Weather Info */}
+      {/* Weather Card */}
       {weather && (
-        <div className="bg-white/10 backdrop-blur-lg p-8 rounded-2xl text-center shadow-lg w-full max-w-md">
-          <h2 className="text-2xl font-semibold mb-4">
-            {weather.name}, {weather.sys.country}
-          </h2>
-
+        <div className="bg-white/10 backdrop-blur-md p-8 rounded-2xl text-center shadow-lg w-full max-w-md">
+          <h2 className="text-3xl font-semibold mb-2">{weather.name}</h2>
           <img
-            src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
-            alt="Weather Icon"
-            className="mx-auto w-24 h-24"
+            src={`https://openweathermap.org/img/wn/${weather.icon}@2x.png`}
+            alt="weather icon"
+            className="mx-auto w-20 h-20"
           />
-
-          <p className="text-5xl font-bold mb-2">
-            {Math.round(weather.main.temp)}°C
-          </p>
-          <p className="capitalize text-lg mb-6">
-            {weather.weather[0].description}
+          <p className="capitalize text-lg mb-4 text-white/90">
+            {weather.description}
           </p>
 
-          <div className="flex justify-around text-sm md:text-base">
-            <p>💧 Humidity: {weather.main.humidity}%</p>
-            <p>🌬️ Wind: {Math.round(weather.wind.speed * 3.6)} km/h</p>
+          <div className="grid grid-cols-3 gap-4 text-sm">
+            <div className="bg-white/20 rounded-xl p-4">
+              <h3 className="font-semibold text-yellow-300">Temp</h3>
+              <p className="text-xl font-bold">{weather.temp}°C</p>
+            </div>
+            <div className="bg-white/20 rounded-xl p-4">
+              <h3 className="font-semibold text-yellow-300">Humidity</h3>
+              <p className="text-xl font-bold">{weather.humidity}%</p>
+            </div>
+            <div className="bg-white/20 rounded-xl p-4">
+              <h3 className="font-semibold text-yellow-300">Wind</h3>
+              <p className="text-xl font-bold">{weather.wind} km/h</p>
+            </div>
           </div>
         </div>
       )}
-    </div>
+    </main>
   );
 }
-
-export default Dashboard;
