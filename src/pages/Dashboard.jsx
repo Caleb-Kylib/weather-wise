@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import toast from 'react-hot-toast';
 
 export default function Dashboard() {
   const [city, setCity] = useState("");
@@ -50,7 +51,9 @@ export default function Dashboard() {
   const fetchWeather = async (e) => {
     e.preventDefault();
     if (!city.trim()) {
-      setError("Please enter a city name.");
+      const msg = "Please enter a city name.";
+      setError(msg);
+      toast.error(msg);
       return;
     }
     setLoading(true);
@@ -65,7 +68,16 @@ export default function Dashboard() {
         fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=${unit}`)
       ]);
 
-      if (!currentResponse.ok || !forecastResponse.ok) throw new Error("City not found.");
+      if (!currentResponse.ok || !forecastResponse.ok) {
+        let message = 'City not found.';
+        try {
+          const body = await currentResponse.json();
+          if (body && body.message) message = body.message;
+        } catch (e) {
+          // ignore JSON parse errors
+        }
+        throw new Error(message);
+      }
 
       const [currentData, forecastData] = await Promise.all([
         currentResponse.json(),
@@ -84,7 +96,13 @@ export default function Dashboard() {
       setForecast(aggregateForecastData(forecastData.list));
       getHourlyForecast(forecastData.list);
     } catch (err) {
-      setError(err.message);
+      const msg = err?.message || 'An unexpected error occurred while fetching weather.';
+      setError(msg);
+      if (err instanceof TypeError) {
+        toast.error('Network error. Please check your connection and try again.');
+      } else {
+        toast.error(msg);
+      }
     } finally {
       setLoading(false);
     }
@@ -144,12 +162,7 @@ export default function Dashboard() {
         </button>
       </div>
 
-      {/* Error Message */}
-      {error && (
-        <p className="bg-red-500/80 px-5 py-3 rounded-lg mb-6 max-w-md text-center shadow-lg">
-          {error}
-        </p>
-      )}
+      {/* Note: UI error display removed; toasts handle messaging */}
 
       {/* Current Weather Card */}
 {weather && (
