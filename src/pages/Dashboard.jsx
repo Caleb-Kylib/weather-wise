@@ -119,7 +119,7 @@ export default function Dashboard() {
       <nav className="w-full max-w-6xl flex justify-between items-center mb-8">
         <div className="flex items-center gap-2">
           <span className="text-2xl">☁️</span>
-          <h1 className="font-bold text-xl">WeatherNow</h1>
+          <h1 className="font-bold text-xl">Weather Wise</h1>
         </div>
         <div className="flex gap-6">
           <NavLink
@@ -188,39 +188,83 @@ export default function Dashboard() {
         </p>
       )}
 
-      {/* --- Current Weather --- */}
-      {weather && (
-        <div className="bg-white/10 backdrop-blur-lg p-10 rounded-3xl text-center shadow-xl w-full max-w-md mb-8 border border-white/20 transition hover:scale-[1.02]">
-          <h2 className="text-3xl font-bold mb-3">{weather.name}</h2>
-          <div className="flex justify-center mb-2">
-            <img
-              src={`https://openweathermap.org/img/wn/${weather.icon}@2x.png`}
-              alt="weather icon"
-              className="w-20 h-20"
-            />
-          </div>
-          <p className="capitalize text-lg mb-6">{weather.description}</p>
-          <div className="grid grid-cols-3 gap-4 text-sm">
-            <div>
-              <span className="text-2xl">🌡️</span>
-              <h3 className="font-semibold">Temp</h3>
-              <p className="text-xl font-bold">
-                {weather.temp}°{unit === "metric" ? "C" : "F"}
-              </p>
-            </div>
-            <div>
-              <span className="text-2xl">💧</span>
-              <h3 className="font-semibold">Humidity</h3>
-              <p className="text-xl font-bold">{weather.humidity}%</p>
-            </div>
-            <div>
-              <span className="text-2xl">💨</span>
-              <h3 className="font-semibold">Wind</h3>
-              <p className="text-xl font-bold">{weather.wind} km/h</p>
-            </div>
-          </div>
-        </div>
-      )}
+       {/* Current Weather Card */}
+       {weather && (
+        <div className="relative bg-white/10 backdrop-blur-xl p-10 rounded-3xl text-center shadow-2xl w-full max-w-md border border-white/20 mb-8 transition-transform duration-500 hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(255,255,255,0.1)] animate-float">
+    
+    {/* City Name */}
+    <h2 className="text-3xl font-bold mb-3 tracking-wide drop-shadow-lg">{weather.name}</h2>
+
+    {/* Weather Icon */}
+    <div className="flex justify-center mb-2">
+      <div className="bg-white/10 p-4 rounded-full shadow-md backdrop-blur-lg">
+        <img
+          src={`https://openweathermap.org/img/wn/${weather.icon}@2x.png`}
+          alt="weather icon"
+          className="w-20 h-20 animate-float-slow"
+        />
+      </div>
+    </div>
+
+    {/* Description */}
+    <p className="capitalize text-lg mb-6 text-white/90 tracking-wide">
+      {weather.description}
+    </p>
+
+    {/* Weather Metrics */}
+    <div className="grid grid-cols-3 gap-4 text-sm">
+      {/* Temperature */}
+      <div className="bg-white/10 rounded-xl p-5 shadow-inner border border-white/10 hover:bg-white/20 transition">
+        <span className="text-orange-400 text-2xl mb-1 block">🌡</span>
+        <h3 className="font-semibold text-orange-300">Temp</h3>
+        <p className="text-xl font-bold">
+          {weather.temp}°{unit === "metric" ? "C" : "F"}
+        </p>
+      </div>
+
+      {/* Humidity */}
+      <div className="bg-white/10 rounded-xl p-5 shadow-inner border border-white/10 hover:bg-white/20 transition">
+        <span className="text-blue-400 text-2xl mb-1 block">💧</span>
+        <h3 className="font-semibold text-blue-300">Humidity</h3>
+        <p className="text-xl font-bold">{weather.humidity}%</p>
+      </div>
+
+      {/* Wind */}
+      <div className="bg-white/10 rounded-xl p-5 shadow-inner border border-white/10 hover:bg-white/20 transition">
+        <span className="text-green-400 text-2xl mb-1 block">💨</span>
+        <h3 className="font-semibold text-green-300">Wind</h3>
+        <p className="text-xl font-bold">{weather.wind} km/h</p>
+      </div>
+    </div>
+
+    {/* ⭐ Save as Favorite Button */}
+    <button
+      onClick={() => {
+        const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+        const newCity = {
+          name: weather.name,
+          description: weather.description,
+          temp: Math.round(weather.temp),
+          icon: weather.icon,
+        };
+
+        const exists = favorites.some((city) => city.name === newCity.name);
+        if (exists) {
+          toast("City already saved ❤️", { icon: "⚠️" });
+        } else {
+          favorites.push(newCity);
+          localStorage.setItem("favorites", JSON.stringify(favorites));
+          toast.success(`${newCity.name} added to favorites! 🌤️`);
+        }
+      }}
+      className="bg-yellow-400 text-blue-900 font-semibold px-5 py-2 rounded-full mt-6 hover:bg-yellow-300 transition-all"
+    >
+      ⭐ Save as Favorite
+    </button>
+  </div>
+)}
+
 
       {/* --- Hourly Forecast --- */}
       {hourlyForecast.length > 0 && (

@@ -1,92 +1,56 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { Link } from "react-router-dom";
 
 export default function Favorites() {
-  const [favorites, setFavorites] = useState([]);
-  const [weatherData, setWeatherData] = useState([]);
-
-  const API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY;
-
-  // Load saved cities from localStorage
-  useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem("favorites")) || [];
-    setFavorites(saved);
-  }, []);
-
-  // Fetch weather for each saved city
-  useEffect(() => {
-    if (favorites.length === 0) return;
-
-    const fetchWeather = async () => {
-      try {
-        const results = await Promise.all(
-          favorites.map(async (city) => {
-            const res = await fetch(
-              `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${API_KEY}`
-            );
-            return res.ok ? res.json() : null;
-          })
-        );
-        setWeatherData(results.filter(Boolean));
-      } catch (error) {
-        console.error("Error fetching favorite cities:", error);
-      }
-    };
-
-    fetchWeather();
-  }, [favorites, API_KEY]);
-
-  // Remove a city from favorites
-  const removeFavorite = (city) => {
-    const updated = favorites.filter((c) => c !== city);
-    setFavorites(updated);
-    localStorage.setItem("favorites", JSON.stringify(updated));
-  };
+  // We'll store favorites in localStorage and load them here
+  const savedCities = JSON.parse(localStorage.getItem("favorites")) || [];
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-blue-700 via-indigo-700 to-purple-700 text-white px-4 py-10">
-      <div className="max-w-4xl mx-auto text-center">
-        <h1 className="text-4xl font-bold mb-8">⭐ Saved Cities</h1>
+    <main
+      className="min-h-screen bg-cover bg-center relative text-white"
+      style={{
+        backgroundImage: `url("/images/clouds.jpg")`,
+      }}
+    >
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
 
-        {favorites.length === 0 ? (
-          <p className="text-white/80 text-lg">
-            You have no saved cities yet. Go to the Dashboard and add some!
-          </p>
+      {/* Navbar */}
+      <nav className="relative z-10 flex justify-between items-center px-8 py-4">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+            <span className="text-blue-600 text-xl font-bold">☁</span>
+          </div>
+          <h1 className="font-bold text-xl">Weather Wise</h1>
+        </div>
+        <div className="flex gap-6 text-sm md:text-base">
+          <Link to="/" className="hover:text-yellow-300">Home</Link>
+          <Link to="/dashboard" className="hover:text-yellow-300">Dashboard</Link>
+          <Link to="/favorites" className="text-yellow-300 font-semibold">Favorites</Link>
+        </div>
+      </nav>
+
+      {/* Saved Cities Section */}
+      <section className="relative z-10 flex flex-col items-center justify-center mt-10 px-4">
+        <h2 className="text-3xl md:text-4xl font-bold mb-8">Your Saved Cities 🌤️</h2>
+
+        {savedCities.length === 0 ? (
+          <p className="text-white/80 text-lg">No favorite cities yet. Go to the dashboard and save one!</p>
         ) : (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {weatherData.map((cityData) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full max-w-5xl">
+            {savedCities.map((city, index) => (
               <div
-                key={cityData.id}
-                className="bg-white/10 backdrop-blur-md rounded-2xl p-6 text-left flex flex-col justify-between"
+                key={index}
+                className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 text-center shadow-lg hover:scale-105 transition-transform"
               >
-                <div>
-                  <h2 className="text-2xl font-semibold mb-2">
-                    {cityData.name}
-                  </h2>
-                  <p className="text-white/80 capitalize">
-                    {cityData.weather[0].description}
-                  </p>
-                  <p className="text-3xl font-bold mt-2">
-                    {Math.round(cityData.main.temp)}°C
-                  </p>
-                </div>
-                <div className="flex justify-between items-center mt-4">
-                  <img
-                    src={`https://openweathermap.org/img/wn/${cityData.weather[0].icon}@2x.png`}
-                    alt={cityData.weather[0].main}
-                    className="w-12 h-12"
-                  />
-                  <button
-                    onClick={() => removeFavorite(cityData.name)}
-                    className="text-red-400 hover:text-red-500 transition font-semibold"
-                  >
-                    Remove
-                  </button>
-                </div>
+                <h3 className="text-2xl font-semibold mb-2">{city.name}</h3>
+                <p className="text-white/80">{city.weather}</p>
+                <p className="text-yellow-300 text-lg mt-2">{city.temp}°C</p>
               </div>
             ))}
           </div>
         )}
-      </div>
+      </section>
     </main>
   );
 }
