@@ -61,6 +61,18 @@ export default function LandingPage() {
             </p>
           </div>
         </div>
+
+        <div className="bg-white/10 backdrop-blur-md p-6 rounded-2xl flex items-start gap-4">
+    <div className="bg-yellow-500/80 w-10 h-10 rounded-full flex items-center justify-center text-white text-lg">
+      ⭐
+    </div>
+    <div>
+      <h3 className="font-semibold text-white text-lg">Save Favorite Cities</h3>
+      <p className="text-white/80 text-sm">
+        Quickly access your most visited cities and view their weather instantly from your favorites page.
+      </p>
+    </div>
+  </div>
       </div>
     </main>
   );
