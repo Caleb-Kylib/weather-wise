@@ -1,6 +1,7 @@
-🌦️ Weather-Wise
 
-Weather-Wise is a simple and responsive weather web application that allows users to search for any city around the world and get real-time weather updates. It uses the OpenWeather API to display information such as temperature, humidity, wind speed, and weather conditions — all presented in a clean and user-friendly dashboard.
+🌤️ Weather Wise
+
+Weather Wise is a modern, responsive weather web application built with React and Tailwind CSS. It provides accurate weather forecasts using data from the OpenWeatherMap API, including current, hourly, and 5-day forecasts. Users can search for any city, toggle between Celsius and Fahrenheit, and save their favorite locations for quick access.
 
 🚀 Features
 
@@ -8,71 +9,83 @@ Weather-Wise is a simple and responsive weather web application that allows user
 
 🌤️ Real-Time Data – Displays temperature, humidity, wind speed, and weather conditions.
 
-💡 Responsive UI – Designed to work seamlessly on both desktop and mobile devices.
+🕒 Hourly Forecast – Displays detailed hourly weather data throughout the day.
+
+📅 5-Day Forecast – Shows weather trends for the next five days.
+
+❤️ Favorites Management – Save favorite cities for quick future access.
+
+🌡️ Unit Toggle – Switch easily between Celsius (°C) and Fahrenheit (°F).
+
+🔄 Auto-Refresh – Dashboard automatically updates weather data every few minutes.
+
+🔔 Notifications – Uses React Hot Toast for clean error handling and success alerts.
+
+📱 Responsive Design – Fully optimized for mobile, tablet, and desktop devices using Tailwind CSS.
 
 🔒 Secure API Integration – API keys are safely stored using environment variables.
 
-🎨 Modern Design – Includes a sleek landing page and an intuitive dashboard layout.
+🎨 Modern UI – Includes a sleek landing page, intuitive dashboard, and favorites page.
+
+⚡ Fast & Deployed – Built with Vite for blazing-fast performance and deployed via Vercel.
 
 🧠 Tech Stack
-
-Frontend: React + Vite
-
-Styling: CSS / Tailwind CSS
-
-API: OpenWeather API
-
-Version Control: Git & GitHub
-
+Category	Technology
+Frontend	React + Vite
+Styling	Tailwind CSS
+API	OpenWeatherMap API
+Notifications	React Hot Toast
+Version Control	Git & GitHub
+Deployment	Vercel
 ⚙️ Setup Instructions
 
 Follow these steps to run the project locally:
 
-Clone the repository
-
+1️⃣ Clone the repository
 git clone https://github.com/Caleb-Kylib/weather-wise.git
 cd weather-wise
 
-
-Install dependencies
-
+2️⃣ Install dependencies
 npm install
 
+3️⃣ Add your API key
 
-Create an environment file
-In the root directory, create a .env file and add your API key:
+Create a .env file in the project root and add your OpenWeather API key:
 
 VITE_OPENWEATHER_API_KEY=your_api_key_here
 
-
-Run the development server
-
+4️⃣ Run the development server
 npm run dev
 
-
-Open your browser and visit:
-
-http://localhost:5173
-
-🖼️ Pages Overview
-🏠 Landing Page
-
-Welcomes users to the app.
-
-Provides an introduction and link to the dashboard.
+5️⃣ Build for production
+npm run build
 
 📊 Dashboard Page
 
-Allows users to input a city name.
+The dashboard allows users to input a city name and view:
 
-Displays:
+🏙️ City name
 
-City name
+🌡️ Temperature (°C / °F)
 
-Temperature (°C)
+💧 Humidity (%)
 
-Humidity (%)
+🌬️ Wind speed (m/s)
 
-Wind speed (m/s)
+☁️ Weather description and icon
 
-Weather description and icon
+⭐ “Save as Favorite” button
+
+Additionally:
+
+Includes hourly and 5-day forecasts displayed in well-styled weather cards.
+
+Data automatically refreshes every few minutes or via a manual refresh button.
+
+💾 Favorites Page
+
+Displays all saved or favorite cities.
+
+Each card shows the city name, temperature, and a brief weather summary.
+
+Background image with a clouds theme for an elegant look.
