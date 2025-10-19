@@ -189,6 +189,34 @@ export default function Dashboard() {
         </button>
       </form>
 
+     {/* --- Unit Toggle --- */}
+<div className="flex items-center gap-3 mb-6">
+  <span className="text-sm text-white/70">Units:</span>
+  <div className="flex items-center bg-white/10 border border-white/20 rounded-full overflow-hidden">
+    <button
+      onClick={() => setUnit("metric")}
+      className={`px-4 py-2 font-semibold transition ${
+        unit === "metric"
+          ? "bg-yellow-400 text-blue-900"
+          : "text-white hover:bg-white/10"
+      }`}
+    >
+      °C
+    </button>
+    <button
+      onClick={() => setUnit("imperial")}
+      className={`px-4 py-2 font-semibold transition ${
+        unit === "imperial"
+          ? "bg-yellow-400 text-blue-900"
+          : "text-white hover:bg-white/10"
+      }`}
+    >
+      °F
+    </button>
+  </div>
+</div>
+
+       
       {/* --- Manual Refresh Button --- */}
       {weather && (
         <button
